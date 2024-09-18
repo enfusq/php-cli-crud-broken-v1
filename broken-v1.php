@@ -17,23 +17,37 @@ $books = [
 
 
 function showAllBooks($books) {
+    ksort($books);
     foreach ($books as $id => $book) {
-        // need to display each book here
+        displayBook($id, $book);
     }
 }
 
-function showBook() {
+function showBook($books) {
     $id = readline("Enter book id: ");
     displayBook($id, $books[$id]);
 }
 
 function addBook(&$books) {
     $title = readline("Enter title: ");
-    $books[] = ['title' => $title, 'author' => $author];
+    $author = readline("Enter author: ");
+    $books[createAddBookId($books)] = ['title' => $title, 'author' => $author];
+}
+
+function createAddBookId(&$books): int {
+    $nextFreeId = 0;
+    foreach (array_keys($books) as $id) {
+        if (!array_key_exists($id + 1, $books)) {
+            $nextFreeId = $id + 1;
+            break;
+        }
+    }
+    return $nextFreeId;
 }
 
 function deleteBook(&$books) {
     $id = readline("Enter book ID you want to delete: ");
+    unset($books[$id]);
 }
 
 function displayBook($id, $book) {
